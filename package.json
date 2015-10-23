@@ -1,0 +1,33 @@
+{
+  "name": "realtime",
+  "version": "0.0.1",
+  "description": "does something cool",
+  "scripts": {
+    "start": "./server.rb",
+    "recompile": "browserify -t babelify app/* -o bundle.js",
+    "gen-doc": "yard doc && yard server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kumquatexpress/realtime.git"
+  },
+  "author": "Boyang Niu (http://boyangniu.me)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "package.json": "0.0.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "browserify": "^11.2.0",
+    "package.json": "0.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/kumquatexpress/realtime/issues"
+  },
+  "homepage": "https://github.com/kumquatexpress/realtime",
+  "main": "bundle.js"
+}
