@@ -7,6 +7,8 @@ require 'uri'
 require 'pry'
 require 'json'
 require 'active_support'
+require 'sqlite3'
+require 'sequel'
 
 Oj.default_options = {mode: :object}
 
@@ -43,10 +45,14 @@ end
 
 class Procs < Sinatra::Base
   register Sinatra::ConfigFile
-  config_file("conf.yml")
 
+  config_file("conf.yml")
+  DB = Sequel.connect("sqlite://#{settings.DB_NAME}")
   redis = Redis.new
   riot_api = RiotWrapper.new(settings.API_KEY)
+  require_relative 'db/dao.rb'
+
+  DAO::setup(DB)
 
   get '/game/latest/:summoner_id' do
     latest_match_id = riot_api.get_latest_match_for_summoner(params[:summoner_id])
@@ -55,6 +61,19 @@ class Procs < Sinatra::Base
     else
       redis.set(params[:summoner_id], latest_match_id)
       [200, riot_api.get_match_details(latest_match_id)]
+    end
+  end
+
+  post '/summoner' do
+    begin
+      matchId = riot_api.get_latest_match_for_summoner(params[:summoner_id])
+      if matchId
+        s = Summoner.new(id: params[:summoner_id])
+        s.save
+        [200, "Successfully saved"]
+      end
+    rescue
+      [500, "Error finding summoner in #{params.inspect}"]
     end
   end
 end

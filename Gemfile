@@ -7,6 +7,8 @@ gem 'oj'
 gem 'rabl'
 gem 'redis'
 gem 'activesupport'
+gem 'sqlite3'
+gem 'sequel'
 
 group :development do
 	gem 'pry'
