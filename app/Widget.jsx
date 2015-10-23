@@ -3,18 +3,14 @@ var React = require('react');
 var Widget = React.createClass({
   getDefaultProps() {
     return {
-        name: 'untitled'  
-    };
-  },
-  getInitialState() {
-    return {
-      num: 0
+        name: 'unknown'  
     };
   },
   render() {
     return (
       <div>
-        <span>{this.props.name}</span>
+        <div>Summoner: {this.props.name}</div>
+        <div>Latest match id: {this.props.data.matchId}</div>
       </div>
     );
   }
