@@ -9,71 +9,55 @@ require 'json'
 require 'active_support'
 require 'sqlite3'
 require 'sequel'
+require_relative './api/riot_wrapper.rb'
 
 Oj.default_options = {mode: :object}
-
-class RiotWrapper
-  def initialize(api_key)
-    @base_params = {api_key: api_key}
-    @base_url = "https://na.api.pvp.net/api/lol/na/v2.2"
-  end
-
-  def get_latest_match_for_summoner(summoner_id)
-    req = URI("#{@base_url}/matchlist/by-summoner/#{summoner_id}")
-    req.query = URI.encode_www_form(@base_params.merge!({beginIndex: 0, endIndex: 1}))
-    resp = Net::HTTP.get_response(req)
-    
-    validate_and_respond(resp){ JSON(resp.body)["matches"].first["matchId"] }
-  end
-
-  def get_match_details(match_id)
-    req = URI("#{@base_url}/match/#{match_id}")
-    req.query = URI.encode_www_form(@base_params)
-    resp = Net::HTTP.get_response(req)
-    
-    validate_and_respond(resp){ resp.body }
-  end
-
-  def validate_and_respond(resp, &data)
-    if resp.kind_of? Net::HTTPSuccess
-      yield
-    else
-      raise "#{resp.code} encountered from riot for #{resp.uri}"
-    end
-  end
-end
 
 class Procs < Sinatra::Base
   register Sinatra::ConfigFile
 
   config_file("conf.yml")
-  DB = Sequel.connect("sqlite://#{settings.DB_NAME}")
+  # DB = Sequel.connect("sqlite://#{settings.DB_NAME}")
   redis = Redis.new
   riot_api = RiotWrapper.new(settings.API_KEY)
-  require_relative 'db/dao.rb'
+  # require_relative 'db/dao.rb'
+  # DAO::setup(DB)
+  set :public_folder, 'public'
 
-  DAO::setup(DB)
+  before "/*" do
+    content_type :json
+  end
+
+  get "/" do
+    redirect '/index.html'
+  end
+
+  error do
+    content_type :json
+    status 400
+
+    e = env['sinatra.error']
+    {:result => 'error', :message => e.message}.to_json
+  end
 
   get '/game/latest/:summoner_id' do
-    latest_match_id = riot_api.get_latest_match_for_summoner(params[:summoner_id])
+    latest_match_id = riot_api.get_latest_match_for_summoner(params[:summoner_id])["matchId"]
     if redis.get(params[:summoner_id]) == latest_match_id.to_s
-      304 
+      304
     else
       redis.set(params[:summoner_id], latest_match_id)
-      [200, riot_api.get_match_details(latest_match_id)]
+      data = riot_api.get_match_details(latest_match_id)
+      [200, data.to_json]
     end
   end
 
-  post '/summoner' do
-    begin
-      matchId = riot_api.get_latest_match_for_summoner(params[:summoner_id])
-      if matchId
-        s = Summoner.new(id: params[:summoner_id])
-        s.save
-        [200, "Successfully saved"]
-      end
-    rescue
-      [500, "Error finding summoner in #{params.inspect}"]
+  get '/summoner/:name' do
+    name = params[:name].downcase
+    summ_id = redis.get(name)
+    unless summ_id
+      summ_id = riot_api.get_summoner_id(name)["id"]
+      redis.set(name, summ_id)
     end
+    [200, {id: summ_id}.to_json]
   end
 end

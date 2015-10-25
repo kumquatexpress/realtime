@@ -4,7 +4,7 @@
   "description": "does something cool",
   "scripts": {
     "start": "./server.rb",
-    "recompile": "browserify -t babelify app/* -o bundle.js",
+    "recompile": "browserify -t babelify app/* -o public/bundle.js",
     "gen-doc": "yard doc && yard server"
   },
   "repository": {
@@ -18,7 +18,8 @@
     "lodash": "^3.10.1",
     "package.json": "0.0.0",
     "react": "^0.14.0",
-    "react-dom": "^0.14.0"
+    "react-dom": "^0.14.0",
+    "react-addons-update": "^0.14.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",

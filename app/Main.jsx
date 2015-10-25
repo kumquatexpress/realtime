@@ -1,34 +1,47 @@
 // main.js
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Widget = require('./Widget.jsx');
+var WidgetList = require('./WidgetList.jsx');
 var AddWidgetForm = require('./AddWidgetForm.jsx')
 var RefreshMixin = require('./Refresh.js');
 var Constants = require('./Constants.js');
+var update = require('react-addons-update');
+var _ = require('lodash');
 
 var MainWindow = React.createClass({
   mixins: [RefreshMixin],
   getInitialState() {
     return {
-      data: []
+      data: {}
     };
   },
   componentDidMount() {
-    this.setInterval(this.poll, 3000);
+    this.setInterval(this.poll, 5000);
+  },
+  replaceSummoner(summoner) {
+    var pId = summoner.id;
+    var newData = update(this.state.data, {$merge: {pId: summoner}});
+    this.setState({
+      data: newData
+    });
+    this.poll();
   },
   poll() {
-
+    _.forEach(this.state.data, function(summoner){
+      $.ajax({
+        url: Constants.procsGameUrl + summoner.id,
+        success: function(data){
+          summoner["matchData"] = data;
+          this.replaceSummoner(summoner);
+        }.bind(this)
+      });
+    }.bind(this));
   },
   render() {
-    var widgets = this.state.data.map(function(player){
-      return (
-        <Widget name={player.name} data={player.data}/>
-      );
-    });
     return (
       <div className="mainWindow">
-        <div id="items">{widgets}</div>
-        <AddWidgetForm />
+        <WidgetList widgets={this.state.data}/>
+        <AddWidgetForm submitUrl={Constants.procsSummUrl} onSubmit={this.replaceSummoner}/>
       </div>
     );
   }

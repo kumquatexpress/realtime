@@ -1,5 +1,6 @@
 var Constants = {
-	procsUrl: "localhost:9393/game/latest/"
-}
+  procsGameUrl: "http://localhost:9393/game/latest/",
+  procsSummUrl: "http://localhost:9393/summoner/"
+};
 
 module.exports = Constants;
