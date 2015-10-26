@@ -29,7 +29,7 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     redis (3.2.1)
-    ruby_sightstone (0.2.0)
+    ruby_sightstone (0.2.2)
     sequel (4.27.0)
     shotgun (0.9.1)
       rack (>= 1.0)
@@ -54,6 +54,7 @@ GEM
     tilt (2.0.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -71,3 +72,7 @@ DEPENDENCIES
   sinatra-contrib
   sqlite3
   thin
+  yard
+
+BUNDLED WITH
+   1.10.6

@@ -1,3 +1,5 @@
 node_modules/
 conf.yml
 public/bundle.js
+.yardoc/
+doc/

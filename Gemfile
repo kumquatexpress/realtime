@@ -12,6 +12,7 @@ gem 'sqlite3'
 gem 'sequel'
 
 group :development do
+	gem 'yard'
 	gem 'pry'
 	gem 'shotgun'
 end

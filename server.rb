@@ -7,23 +7,18 @@ require 'uri'
 require 'pry'
 require 'json'
 require 'active_support'
-require 'sqlite3'
 require 'ruby_sightstone'
-require 'sequel'
 
 Oj.default_options = {mode: :object}
 
 class Procs < Sinatra::Base
   register Sinatra::ConfigFile
-
-  config_file("conf.yml")
-  # DB = Sequel.connect("sqlite://#{settings.DB_NAME}")
-  redis = Redis.new
-  riot_api = RubySightstone.new(settings.API_KEY, "na")
-  # require_relative 'db/dao.rb'
-  # DAO::setup(DB)
   set :public_folder, 'public'
 
+  config_file("conf.yml")
+  redis = Redis.new
+  riot_api = RubySightstone.new(settings.API_KEY, "na")
+  
   before "/*" do
     content_type :json
   end
@@ -42,7 +37,7 @@ class Procs < Sinatra::Base
 
   get '/game/latest/:summoner_id' do
     begin
-      latest_match_id = riot_api.get_latest_match_for_summoner(params[:summoner_id])["matchId"]
+      latest_match_id = riot_api.latest_match(params[:summoner_id])["matchId"]
       if redis.get(params[:summoner_id]) == latest_match_id.to_s
         304
       else
@@ -50,9 +45,9 @@ class Procs < Sinatra::Base
         data = riot_api.get_match_details(latest_match_id)
         [200, data.to_json]
       end
-    rescue
+    rescue RiotAPIException => e
       redis.del(params[:summoner_id])
-      raise "Wasn't able to access the Riot API"
+      raise "Wasn't able to access the Riot API #{e}"
     end
   end
 
@@ -61,11 +56,11 @@ class Procs < Sinatra::Base
     summ_id = redis.get(name)
     unless summ_id
       begin
-        summ_id = riot_api.get_summoner_id(name)["id"]
+        summ_id = riot_api.summoner(name)["id"]
         redis.set(name, summ_id)
-      rescue
+      rescue RiotAPIException => e
         redis.del(name)
-        raise "Wasn't able to access the Riot API"
+        raise "Wasn't able to access the Riot API #{e}"
       end
     end
     [200, {id: summ_id}.to_json]

@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "description": "does something cool",
   "scripts": {
-    "start": "./server.rb",
-    "recompile": "browserify -t babelify app/* -o public/bundle.js",
-    "gen-doc": "yard doc && yard server"
+    "start": "npm run start:server && npm run start:client & wait",
+    "start:server": "shotgun config.ru &",
+    "start:client": "watchify site.js -v -t babelify -g envify -p livereactload -o public/bundle.js",
+    "compile": "browserify -t babelify app/* -o public/bundle.js",
+    "clean": "rm public/bundle.js",
+    "gen-doc": "bundle exec yard doc && bundle exec yard server"
   },
   "repository": {
     "type": "git",
@@ -14,18 +17,23 @@
   "author": "Boyang Niu (http://boyangniu.me)",
   "license": "MIT",
   "dependencies": {
+    "envify": "^3.4.0",
     "express": "^4.13.3",
     "lodash": "^3.10.1",
     "package.json": "0.0.0",
     "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "react-addons-update": "^0.14.0"
+    "react-addons-update": "^0.14.0",
+    "react-dom": "^0.14.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
+    "babel-plugin-react-transform": "^1.1.1",
     "babelify": "^6.4.0",
     "browserify": "^11.2.0",
-    "package.json": "0.0.0"
+    "livereactload": "^2.0.5",
+    "package.json": "0.0.0",
+    "react-proxy": "^1.1.1",
+    "watchify": "^3.5.0"
   },
   "bugs": {
     "url": "https://github.com/kumquatexpress/realtime/issues"

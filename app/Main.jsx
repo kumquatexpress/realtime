@@ -1,6 +1,5 @@
 // main.js
 var React = require('react');
-var ReactDOM = require('react-dom');
 var WidgetList = require('./WidgetList.jsx');
 var AddWidgetForm = require('./AddWidgetForm.jsx')
 var RefreshMixin = require('./Refresh.js');
@@ -47,7 +46,4 @@ var MainWindow = React.createClass({
   }
 });
 
-ReactDOM.render(
-  <MainWindow />,
-  document.getElementById('main')
-);
+module.exports = MainWindow;
