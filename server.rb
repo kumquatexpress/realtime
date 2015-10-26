@@ -36,18 +36,20 @@ class Procs < Sinatra::Base
   end
 
   get '/game/latest/:summoner_id' do
-    begin
-      latest_match_id = riot_api.latest_match(params[:summoner_id])["matchId"]
-      if redis.get(params[:summoner_id]) == latest_match_id.to_s
-        304
-      else
+    latest_match_id = riot_api.latest_match(params[:summoner_id])["matchId"]
+    if redis.get(params[:summoner_id]) == latest_match_id.to_s
+      [200, redis.get(latest_match_id)]
+    else
+      begin
+        data = riot_api.match(latest_match_id)
         redis.set(params[:summoner_id], latest_match_id)
-        data = riot_api.get_match_details(latest_match_id)
+        redis.set(latest_match_id, data.to_json)
         [200, data.to_json]
+      rescue RiotAPIException => e
+        redis.del(params[:summoner_id])
+        redis.del(latest_match_id)
+        raise "Wasn't able to access the Riot API #{e}"
       end
-    rescue RiotAPIException => e
-      redis.del(params[:summoner_id])
-      raise "Wasn't able to access the Riot API #{e}"
     end
   end
 
@@ -56,7 +58,7 @@ class Procs < Sinatra::Base
     summ_id = redis.get(name)
     unless summ_id
       begin
-        summ_id = riot_api.summoner(name)["id"]
+        summ_id = riot_api.summoner(name)[name]["id"]
         redis.set(name, summ_id)
       rescue RiotAPIException => e
         redis.del(name)

@@ -4,7 +4,9 @@ var Player = React.createClass({
     render() {
         return (
             <div>
-            Player
+	            <h4>Player</h4>
+	            <div>Name: {this.props.data.name}</div>
+	            <div>Id: {this.props.data.id}</div>
             </div>
         );
     }

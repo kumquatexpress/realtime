@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "does something cool",
   "scripts": {
-    "start": "npm run start:server && npm run start:client & wait",
-    "start:server": "shotgun config.ru &",
+    "start": "npm run start:server:bg && npm run start:client & wait",
+    "start:server": "shotgun config.ru",
+    "start:server:bg": "shotgun config.ru &",
     "start:client": "watchify site.js -v -t babelify -g envify -p livereactload -o public/bundle.js",
     "compile": "browserify -t babelify app/* -o public/bundle.js",
     "clean": "rm public/bundle.js",

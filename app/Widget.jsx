@@ -1,5 +1,6 @@
 var React = require('react');
 var Player = require('./Player.jsx');
+var _ = require('lodash');
 
 var Widget = React.createClass({
   getDefaultProps() {
@@ -10,7 +11,7 @@ var Widget = React.createClass({
   render() {
     var matchPlayers;
     if(this.props.summoner.matchData){
-      _.map(this.props.summoner.matchData.participants, function(player){
+      matchPlayers = _.map(this.props.summoner.matchData.players, function(player){
         return (
           <Player data={player}/>
         );
