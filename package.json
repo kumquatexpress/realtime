@@ -6,8 +6,8 @@
     "start": "npm run start:server:bg && npm run start:client & wait",
     "start:server": "shotgun config.ru",
     "start:server:bg": "shotgun config.ru &",
-    "start:client": "watchify site.js -v -t babelify -g envify -p livereactload -o public/bundle.js",
-    "compile": "browserify -t babelify app/* -o public/bundle.js",
+    "start:client": "watchify site.js -v -t babelify -t lessify -g envify -p livereactload -o public/bundle.js",
+    "compile": "browserify -t babelify -t lessify app/* -o public/bundle.js",
     "clean": "rm public/bundle.js",
     "gen-doc": "bundle exec yard doc && bundle exec yard server"
   },
@@ -20,6 +20,7 @@
   "dependencies": {
     "envify": "^3.4.0",
     "express": "^4.13.3",
+    "lessify": "^1.0.1",
     "lodash": "^3.10.1",
     "package.json": "0.0.0",
     "react": "^0.14.0",

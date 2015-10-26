@@ -8,6 +8,7 @@ var Helpers = {
 			var identity = _.find(matchData.participantIdentities, {"participantId": p.participantId}).player;
 			player["name"] = identity["summonerName"];
 			player["id"] = identity["summonerId"];
+			player["teamId"] = player["teamId"] == 100 ? "blueTeam" : "redTeam";
 			players.push(player);
 		});
 		return {"players": players};

@@ -19,8 +19,9 @@ var MainWindow = React.createClass({
     this.setInterval(this.poll, 5000);
   },
   replaceSummoner(summoner) {
-    var pId = summoner.id;
-    var newData = update(this.state.data, {$merge: {pId: summoner}});
+    var newSumm = {};
+    newSumm[summoner.id] = summoner;
+    var newData = update(this.state.data, {$merge: newSumm});
     this.setState({
       data: newData
     });
@@ -31,6 +32,9 @@ var MainWindow = React.createClass({
         url: Constants.procsGameUrl + summoner.id,
         contentType: 'application/json',
         success: function(data){
+        	if(summoner.matchData && data.matchId == summoner.matchData.matchId){
+        		return;
+        	}
         	var massagedData = Helpers.massageData(data);
           summoner["matchData"] = massagedData;
           this.replaceSummoner(summoner);

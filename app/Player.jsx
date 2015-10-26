@@ -3,7 +3,7 @@ var React = require('react');
 var Player = React.createClass({
     render() {
         return (
-            <div>
+            <div className={"player " + this.props.data.teamId}>
 	            <h4>Player</h4>
 	            <div>Name: {this.props.data.name}</div>
 	            <div>Id: {this.props.data.id}</div>
