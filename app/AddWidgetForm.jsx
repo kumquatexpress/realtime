@@ -17,7 +17,7 @@ var AddWidgetForm = React.createClass({
     return (
       <div className="flex-item widgetForm col-sm-12">
       	<input className="input" required type="text" placeholder="Summoner name" ref="summ_name"/>
-        <button className="btn green ghost ml1" onClick={this.submitForm}>Add Widget</button>
+        <button className="btn green ghost block" onClick={this.submitForm}>Add Widget</button>
       </div>
     );
   }

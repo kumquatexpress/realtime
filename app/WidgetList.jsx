@@ -14,12 +14,20 @@ var WidgetList = React.createClass({
         <Widget summoner={summoner} key={summoner.id}/>
       );
     });
-    var parts = _.partition(widgets, function(w, idx){ return idx % 2; });
+    var columnLength = widgets.length;
+    if(columnLength > 4){
+      columnLength = 4;
+    }
+    var parts = _.groupBy(widgets, function(w, idx){ return idx % columnLength; });
+    var columns = _.map(parts, function(ws){
+      return (
+        <div className={"flex-item col-md-"+12/columnLength}>{ws}</div>
+        );
+    });
     return (
       <div className="flex-item items col-md-12">
         <div className="flex-container pb1 px1">
-          <div className="flex-item col-md-6">{parts[1]}</div>
-          <div className="flex-item col-md-6">{parts[0]}</div>
+          {columns}
         </div>
       </div>
     );
