@@ -11,7 +11,7 @@ var Helpers = {
 			player["teamId"] = player["teamId"] == 100 ? "blueTeam" : "redTeam";
 			players.push(player);
 		});
-		return {"players": players};
+		return {"players": players, "matchId": matchData.matchId};
 	}
 }
 

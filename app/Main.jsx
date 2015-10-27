@@ -36,7 +36,7 @@ var MainWindow = React.createClass({
         		return;
         	}
         	var massagedData = Helpers.massageData(data);
-          summoner["matchData"] = massagedData;
+          summoner.matchData = massagedData;
           this.replaceSummoner(summoner);
         }.bind(this)
       });
@@ -44,7 +44,7 @@ var MainWindow = React.createClass({
   },
   render() {
     return (
-      <div className="mainWindow">
+      <div className="mainWindow container">
         <WidgetList widgets={this.state.data}/>
         <AddWidgetForm submitUrl={Constants.procsSummUrl} onSubmit={this.replaceSummoner}/>
       </div>
