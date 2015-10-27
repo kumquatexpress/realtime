@@ -9,12 +9,13 @@ var Widget = React.createClass({
     };
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return true;//this.props.summoner.matchData || nextProps.summoner.matchData.matchId != this.props.summoner.matchData.matchId;
+    return true//!this.props.summoner.matchData || nextProps.summoner.matchData.matchId != this.props.summoner.matchData.matchId;
   },
   render() {
     var redPlayers;
     var bluePlayers;
     if(this.props.summoner.matchData){
+      console.log("Asdf")
       redPlayers = _.map(_.filter(this.props.summoner.matchData.players, {"teamId": "redTeam"}), function(player){
         return (
           <Player data={player} key={player.id}/>
