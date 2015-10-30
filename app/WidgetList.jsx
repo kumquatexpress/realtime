@@ -9,17 +9,17 @@ var WidgetList = React.createClass({
     };
   },
   render() {
-		var widgets = _.map(this.props.widgets, function(summoner){
+		let widgets = _.map(this.props.widgets, function(summoner){
       return (
         <Widget summoner={summoner} key={summoner.id}/>
       );
     });
-    var columnLength = widgets.length;
+    let columnLength = widgets.length;
     if(columnLength > 4){
       columnLength = 4;
     }
-    var parts = _.groupBy(widgets, function(w, idx){ return idx % columnLength; });
-    var columns = _.map(parts, function(ws){
+    let parts = _.groupBy(widgets, function(w, idx){ return idx % columnLength; });
+    let columns = _.map(parts, function(ws){
       return (
         <div className={"flex-item col-md-"+12/columnLength}>{ws}</div>
         );

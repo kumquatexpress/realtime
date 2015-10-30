@@ -2,11 +2,11 @@ var React = require('react');
 
 var AddWidgetForm = React.createClass({
 	submitForm() {
-		var summ_name = this.refs.summ_name.value.trim();
+		let summ_name = this.refs.summ_name.value.trim();
 		$.ajax({
 			url: this.props.submitUrl+summ_name,
 			success: function(data){
-				var summoner = {};
+				let summoner = {};
 				summoner["id"] = data["id"];
 				summoner["name"] = summ_name;
 				this.props.onSubmit(summoner);

@@ -15,7 +15,6 @@ var Widget = React.createClass({
     var redPlayers;
     var bluePlayers;
     if(this.props.summoner.matchData){
-      console.log("Asdf")
       redPlayers = _.map(_.filter(this.props.summoner.matchData.players, {"teamId": "redTeam"}), function(player){
         return (
           <Player data={player} key={player.id}/>

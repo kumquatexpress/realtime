@@ -19,9 +19,9 @@ var MainWindow = React.createClass({
     this.setInterval(this.poll, 5000);
   },
   replaceSummoner(summoner) {
-    var newSumm = {};
+    let newSumm = {};
     newSumm[summoner.id] = summoner;
-    var newData = update(this.state.data, {$merge: newSumm});
+    let newData = update(this.state.data, {$merge: newSumm});
     this.setState({
       data: newData
     });

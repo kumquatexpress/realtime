@@ -2,10 +2,10 @@ var _ = require('lodash');
 
 var Helpers = {
 	massageData: function(matchData){
-		var players = [];
+		let players = [];
 		_.forEach(matchData["participants"], function(p){
-			var player = {};
-			var identity = _.find(matchData.participantIdentities, {"participantId": p.participantId}).player;
+			let player = {};
+			let identity = _.find(matchData.participantIdentities, {"participantId": p.participantId}).player;
 			player.name = identity.summonerName;
 			player.id = identity.summonerId;
 			player.teamId = p.teamId == 100 ? "blueTeam" : "redTeam";
